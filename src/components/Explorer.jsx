@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useDesk } from '../lib/context.js'
-import { TYPE_LABEL, compareBy, formatDate, groupItems, isTrashed, matches, parentOf, pathOf } from '../lib/items.js'
-import { ArrangeIcon, BackIcon, BinIcon, DesktopIcon, FolderIcon, NoteIcon, PictureIcon, SearchIcon, UpIcon, ViewsIcon } from './icons.jsx'
+import { TYPE_LABEL, compareBy, formatDate, groupItems, isTrashed, parentOf, pathOf } from '../lib/items.js'
+import { ArrangeIcon, BinIcon, DesktopIcon, FolderIcon, NoteIcon, PictureIcon, UpIcon, ViewsIcon } from './icons.jsx'
 import ItemTile from './ItemTile.jsx'
 import { DetailsHead, Panel, TaskLink } from './TaskPane.jsx'
 
@@ -14,13 +14,10 @@ export default function Explorer({ win }) {
   const [view, setView] = useState('thumbs')
   const [sort, setSort] = useState('name')
   const [group, setGroup] = useState('none')
-  // 搜索框的内容只属于当前文件夹，跳到别的文件夹时自动清空。
-  const [filter, setFilter] = useState({ folder: folderId, q: '' })
-  const query = filter.folder === folderId ? filter.q : ''
 
-  // 当前文件夹的内容 → 按搜索框过滤 → 排序 → 分组。每次渲染时现算，不单独存。
+  // 当前文件夹的内容 → 排序 → 分组。每次渲染时现算，不单独存。
   const contents = items.filter(it => it.parent === folderId)
-  const list = contents.filter(it => matches(it, query)).sort(compareBy(sort))
+  const list = [...contents].sort(compareBy(sort))
   const groups = groupItems(list, group)
   const selected = selection.scope === folderId ? selection.ids.map(id => byId[id]).filter(Boolean) : []
   const selectedIds = selected.map(it => it.id)
@@ -78,21 +75,9 @@ export default function Explorer({ win }) {
   return (
     <>
       <div className="toolbar">
-        <button className="tool" disabled={!win.history.length} onClick={() => api.back(win.id)} title="Back">
-          <BackIcon /> Back
-        </button>
         <button className="tool" disabled={!up} onClick={() => api.navigate(win.id, up)} title="Up one level">
           <UpIcon />
         </button>
-        <span className="tool-sep" />
-        <label className="tool-search" title="Show only files whose name or text contains this">
-          <SearchIcon size={14} />
-          <input
-            value={query}
-            placeholder={`Search ${path[path.length - 1]}`}
-            onChange={e => setFilter({ folder: folderId, q: e.target.value })}
-          />
-        </label>
         <span className="tool-sep" />
         <button className="tool" onClick={e => menuBelow(e, viewEntries)}>
           <ViewsIcon /> Views ▾
@@ -181,11 +166,7 @@ export default function Explorer({ win }) {
           ))}
           {!list.length && (
             <p className="empty">
-              {query
-                ? `Nothing here matches “${query}”.`
-                : isTrash
-                  ? 'The Recycle Bin is empty.'
-                  : 'This folder is empty. Drag files here to put them in it.'}
+              {isTrash ? 'The Recycle Bin is empty.' : 'This folder is empty. Drag files here to put them in it.'}
             </p>
           )}
         </div>
@@ -194,7 +175,6 @@ export default function Explorer({ win }) {
       <footer className="statusbar">
         <span>
           {list.length} object{list.length === 1 ? '' : 's'}
-          {query && ` matching “${query}”`}
         </span>
         {selected.length > 0 && <span>{selected.length} selected</span>}
         <span className="status-hint">
