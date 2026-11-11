@@ -1,0 +1,40 @@
+# 推到main就自动构建，发布到GitHub Pages；
+# 构建挂了部署也跟着挂，等于顺便检查了构建
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: # 也能在Actions页面手动跑
+
+# 读代码、写Pages；id-token是部署到Pages必须的
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 连着推好几次，只留最新那次部署
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22 # Vite 8要Node 20.19或22.12以上
+          cache: npm
+      - run: npm ci # 严格按package-lock装
+      - run: npm run build
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist # 构建结果在dist里
+      - id: deployment
+        uses: actions/deploy-pages@v4

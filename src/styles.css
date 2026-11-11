@@ -1,0 +1,1564 @@
+/* 2000年代初的桌面风格；全是手写CSS，没用UI库 */
+
+* {
+  box-sizing: border-box;
+}
+
+/* 整个页面铺满屏幕，不留边 */
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+/* 默认不让选中文字；拖图标的时候不会选中一片 */
+body {
+  overflow: hidden;
+  font: 11px/1.35 Tahoma, 'Segoe UI', Verdana, Geneva, sans-serif;
+  color: #000;
+  background: #245edb;
+  user-select: none;
+}
+
+/* 表单控件默认不继承字体；强制跟着走 */
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+/* 输入框里还是要能选文字 */
+input,
+textarea {
+  user-select: text;
+}
+
+/* 拖拽中光标是抓着的手 */
+body.is-dragging,
+body.is-dragging * {
+  cursor: grabbing;
+}
+
+.screen {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+/* ---------- 桌面 ---------- */
+
+/* 桌面让出底下30px给任务栏 */
+.desktop {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 30px;
+  left: 0;
+  overflow: hidden;
+}
+
+/* 壁纸不接鼠标事件；点上去等于点桌面 */
+.wallpaper {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.wallpaper-photo {
+  background: #000 center / cover no-repeat;
+}
+
+/* 框选的半透明蓝框 */
+.band {
+  position: absolute;
+  border: 1px solid #316ac5;
+  background: rgba(49, 106, 197, 0.25);
+  pointer-events: none;
+}
+
+/* 时间线排列后顶上的年份标签；4.5秒后淡出，跟App里的定时器对上 */
+.arrange-label {
+  position: absolute;
+  top: 0;
+  width: 84px;
+  padding: 1px 0;
+  border-radius: 0 0 6px 6px;
+  background: rgba(255, 255, 225, 0.92);
+  color: #333;
+  font-weight: bold;
+  text-align: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+  pointer-events: none;
+  z-index: 2;
+  animation: fade-label 4.5s ease-in forwards;
+}
+
+/* 前75%一直显示，最后才淡出 */
+@keyframes fade-label {
+  0%,
+  75% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* ---------- 文件图标 ---------- */
+
+.item-graphic {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+}
+
+/* 名字太长随便断行；不然会撑出去 */
+.item-label {
+  overflow-wrap: break-word;
+}
+
+/* 照片缩略图；白边加阴影，像洗出来的相片 */
+.thumb {
+  position: relative;
+  display: block;
+  padding: 2px;
+  background: #fff;
+  border: 1px solid #a5a5a5;
+  box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.35);
+}
+
+/* 详细列表里的小缩略图；不要阴影 */
+.thumb.small {
+  padding: 1px;
+  box-shadow: none;
+}
+
+/* 图片没加载出来时先显示灰底 */
+.thumb img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: #dfe3ea;
+}
+
+.item.selected .thumb {
+  border-color: #316ac5;
+}
+
+/* 选中的照片盖一层蓝 */
+.item.selected .thumb::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  bottom: 2px;
+  left: 2px;
+  background: rgba(49, 106, 197, 0.42);
+}
+
+/* 选中的SVG图标染成蓝色；用滤镜，省得每个图标画两遍 */
+.item.selected .item-graphic > svg {
+  filter: sepia(1) hue-rotate(175deg) saturate(2.6) brightness(0.82);
+}
+
+/* 正在被拖的原图标变淡 */
+.item.moving {
+  opacity: 0.4;
+}
+
+/* 桌面图标；绝对定位，位置由App算 */
+.item-desktop {
+  position: absolute;
+  width: 84px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 3px 2px 2px;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  cursor: grab;
+}
+
+.item-desktop .item-graphic {
+  width: 52px;
+  height: 46px;
+}
+
+.item-desktop:hover {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.item-desktop .item-label {
+  max-width: 82px;
+  padding: 0 2px;
+  color: #fff;
+  text-align: center;
+  text-shadow: 1px 1px 1px #000, 0 0 3px rgba(0, 0, 0, 0.8);
+  max-height: 2.7em; /* 最多两行；行高1.35 */
+  overflow: hidden;
+}
+
+.item-desktop.selected .item-label {
+  background: #316ac5;
+  text-shadow: none;
+  max-height: 8.1em; /* 选中时最多显示六行 */
+}
+
+.item-desktop.drop-hover {
+  background: rgba(49, 106, 197, 0.5);
+  border-color: #b9d1ff;
+}
+
+.item.drop-hover .item-graphic {
+  transform: scale(1.12);
+}
+
+/* 文件夹窗口里的缩略图视图；一个个往右排，排满了换行 */
+.view-thumbs .ex-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.item-tile {
+  width: 108px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 4px 4px;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  cursor: grab;
+}
+
+.item-tile .item-graphic {
+  width: 96px;
+  height: 80px;
+  border: 1px solid #e0ddd0;
+  background: #fbfbf8;
+}
+
+.item-tile .item-label {
+  max-width: 100%;
+  padding: 0 3px;
+  text-align: center;
+  max-height: 2.7em; /* 最多两行；行高1.35 */
+  overflow: hidden;
+}
+
+.item-tile:hover {
+  background: #eef3fc;
+  border-color: #c7d6f2;
+}
+
+.item-tile.selected .item-label {
+  background: #316ac5;
+  color: #fff;
+}
+
+.item-tile.selected .item-graphic {
+  border-color: #316ac5;
+}
+
+.item-tile.drop-hover {
+  background: #d8e6fd;
+  border-color: #316ac5;
+}
+
+/* 详细信息视图；一行一个文件；表头和每一行都是横着排的flex，列宽靠下面的col-*统一 */
+.view-details .ex-grid {
+  display: flex;
+  flex-direction: column;
+}
+
+.row-head,
+.item-row {
+  display: flex;
+}
+
+/* 各列多宽；名字最宽，搜索结果多一列“In Folder”，日期固定76px */
+.col-name {
+  flex: 2;
+  min-width: 140px;
+}
+
+.col-where {
+  flex: 1.2;
+  min-width: 90px;
+}
+
+.col-type {
+  flex: 1;
+  min-width: 90px;
+}
+
+.col-date {
+  flex: none;
+  width: 76px;
+}
+
+.row-head {
+  position: sticky;
+  top: -8px;
+  z-index: 1;
+  margin: -8px -8px 3px;
+  padding: 0 8px;
+  background: #ebeadb;
+  border-bottom: 1px solid #d4d0c0;
+}
+
+.row-head > * {
+  padding: 3px 6px;
+  border: 0;
+  border-right: 1px solid #d4d0c0;
+  background: linear-gradient(#fff, #ebeadb);
+  text-align: left;
+  white-space: nowrap;
+}
+
+.row-head button {
+  cursor: pointer;
+}
+
+.row-head button:hover {
+  background: #fff;
+  box-shadow: inset 0 -3px #f9b116;
+}
+
+.row-head .sorted {
+  background: #f5f4ea;
+}
+
+.item-row {
+  align-items: center;
+  height: 21px;
+  cursor: grab;
+}
+
+.item-row .cell {
+  padding: 0 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cell-name {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.item-row .item-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.item-row:hover {
+  background: #eef3fc;
+}
+
+.item-row.selected {
+  background: #316ac5;
+  color: #fff;
+}
+
+.item-row.drop-hover {
+  background: #d8e6fd;
+  outline: 1px solid #316ac5;
+}
+
+/* 改名的输入框 */
+.rename {
+  width: 100%;
+  max-width: 120px;
+  padding: 0 2px;
+  border: 1px solid #000;
+  outline: 0;
+  background: #fff;
+  color: #000;
+  text-align: center;
+}
+
+.item-row .rename {
+  text-align: left;
+}
+
+/* 拖拽反馈；幽灵图标、数量、提示文字 */
+/* 拖拽层盖在最上面；完全不接鼠标，里面的东西也跟着不接；不然elementsFromPoint找目标会被它挡住 */
+.drag-layer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 3000;
+  pointer-events: none;
+}
+
+.item-desktop.ghost {
+  position: fixed;
+  opacity: 0.65;
+}
+
+.ghost-count {
+  position: fixed;
+  min-width: 20px;
+  padding: 1px 6px;
+  border-radius: 10px;
+  background: #316ac5;
+  color: #fff;
+  font-weight: bold;
+  text-align: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+.drag-hint {
+  position: fixed;
+  padding: 2px 6px;
+  border: 1px solid #000;
+  background: #ffffe1;
+  white-space: nowrap;
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+/* 放不了的时候提示变红 */
+.drag-hint.no {
+  color: #a00;
+}
+
+/* ---------- 窗口 ---------- */
+
+/* 窗口层本身不接鼠标；只有窗口接，空的地方点下去就是桌面 */
+.windows-layer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 30px;
+  left: 0;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* 窗口；蓝边框，顶上圆角 */
+.window {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  pointer-events: auto;
+  background: #ece9d8;
+  border: 3px solid #0831d9;
+  border-top: 0;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 2px 4px 12px rgba(0, 0, 0, 0.45);
+}
+
+/* 没激活的窗口颜色变淡 */
+.window.inactive {
+  border-color: #7b97e0;
+}
+
+.window.max {
+  border-radius: 0;
+}
+
+/* 标题栏；左右各伸出去3px，盖住窗口边框 */
+.titlebar {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  height: 30px;
+  margin: 0 -3px;
+  padding: 0 5px 0 7px;
+  border-radius: 7px 7px 0 0;
+  color: #fff;
+  background: linear-gradient(
+    180deg,
+    #0997ff,
+    #0053ee 8%,
+    #0050ee 40%,
+    #06f 88%,
+    #06f 93%,
+    #005bff 95%,
+    #003dd7 96%,
+    #003dd7
+  );
+}
+
+.window.max .titlebar {
+  border-radius: 0;
+}
+
+.window.inactive .titlebar {
+  background: linear-gradient(180deg, #7697e7, #7e9ee3 3%, #94afe8 6%, #82a5e4 14%, #7996de 25%, #7b99e1 56%, #82a9e9 81%, #7a93df 97%, #abbae3);
+}
+
+.title-icon {
+  display: flex;
+}
+
+.title-text {
+  flex: 1;
+  min-width: 0;
+  font: bold 13px 'Trebuchet MS', Tahoma, sans-serif;
+  letter-spacing: 0.2px;
+  text-shadow: 1px 1px #0f1089;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.window.inactive .title-text {
+  color: #d8e4f8;
+  text-shadow: none;
+}
+
+.title-buttons {
+  display: flex;
+  gap: 2px;
+}
+
+.title-buttons button {
+  position: relative;
+  width: 21px;
+  height: 21px;
+  padding: 0;
+  border: 1px solid #fff;
+  border-radius: 3px;
+  background: radial-gradient(circle at 90% 90%, #0054e9, #2263d5 55%, #4479e4 70%, #a3bbec 90%, #fff);
+  cursor: pointer;
+}
+
+.title-buttons button:hover {
+  filter: brightness(1.18);
+}
+
+.title-buttons button:active {
+  filter: brightness(0.85);
+}
+
+.window.inactive .title-buttons button {
+  opacity: 0.75;
+}
+
+/* 关闭按钮是红的 */
+.title-buttons .tb-close {
+  background: radial-gradient(circle at 90% 90%, #cc4600, #dc6527 55%, #cd7546 70%, #ffccb2 90%, #fff);
+}
+
+/* 最小化、最大化、还原、关闭的图案全用伪元素画，不用图片 */
+.tb-min::before {
+  content: '';
+  position: absolute;
+  left: 4px;
+  bottom: 4px;
+  width: 7px;
+  height: 3px;
+  background: #fff;
+}
+
+.tb-max::before,
+.tb-restore::before,
+.tb-restore::after {
+  content: '';
+  position: absolute;
+  border: 1px solid #fff;
+  border-top-width: 3px;
+}
+
+.tb-max::before {
+  top: 3px;
+  right: 3px;
+  bottom: 3px;
+  left: 3px;
+}
+
+.tb-restore::before {
+  left: 7px;
+  top: 3px;
+  width: 9px;
+  height: 8px;
+}
+
+.tb-restore::after {
+  left: 3px;
+  top: 7px;
+  width: 9px;
+  height: 8px;
+  background: #2a65d8;
+}
+
+.tb-close::before,
+.tb-close::after {
+  content: '';
+  position: absolute;
+  left: 8.5px;
+  top: 3px;
+  width: 2px;
+  height: 13px;
+  background: #fff;
+  transform: rotate(45deg);
+}
+
+.tb-close::after {
+  transform: rotate(-45deg);
+}
+
+/* 窗口内容区；min-height: 0让里面的列表能自己滚动，不会撑破窗口 */
+.window-body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* 右下角拉伸的手柄；两道斜线用渐变画 */
+.resize-grip {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 14px;
+  height: 14px;
+  cursor: nwse-resize;
+  background:
+    linear-gradient(135deg, transparent 45%, #fff 45%, #fff 52%, #a19f92 52%, #a19f92 59%, transparent 59%),
+    linear-gradient(135deg, transparent 70%, #fff 70%, #fff 77%, #a19f92 77%, #a19f92 84%, transparent 84%);
+}
+
+/* 工具栏、地址栏、状态栏 */
+.toolbar {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px 4px;
+  border-bottom: 1px solid #d4d0c0;
+  overflow: hidden;
+}
+
+.tool {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 30px;
+  padding: 0 6px;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  background: none;
+  cursor: pointer;
+}
+
+.tool:enabled:hover {
+  border-color: #cecece;
+  background: linear-gradient(#fff, #ebe8d6);
+  box-shadow: inset 0 -1px #d7d2bc;
+}
+
+.tool:enabled:active {
+  background: #e3e0cf;
+}
+
+.tool:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.tool-sep {
+  flex: none;
+  width: 1px;
+  align-self: stretch;
+  margin: 4px 3px;
+  background: #c5c2b2;
+  box-shadow: 1px 0 #fff;
+}
+
+/* 工具栏里的搜索框；占剩下的空间，最宽220px */
+.tool-search {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 80px;
+  max-width: 220px;
+  margin: 0 3px;
+  padding: 2px 5px;
+  border: 1px solid #7f9db9;
+  background: #fff;
+}
+
+.tool-search input {
+  width: 100%;
+  border: 0;
+  outline: 0;
+  background: none;
+}
+
+.addressbar {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 6px;
+  border-bottom: 1px solid #d4d0c0;
+  color: #555;
+}
+
+.addr-field {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 4px;
+  border: 1px solid #7f9db9;
+  background: #fff;
+  color: #000;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.addr-field span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.statusbar {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  height: 22px;
+  padding: 0 18px 0 6px;
+  border-top: 1px solid #d4d0c0;
+  background: #ece9d8;
+  color: #333;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+/* 状态栏右边的灰色小字 */
+.status-hint {
+  margin-left: auto;
+  color: #6a6a6a;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 文件夹窗口主体；左边任务面板，右边文件列表 */
+.explorer-main {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+}
+
+.taskpane {
+  flex: none;
+  width: 196px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px 10px;
+  overflow: auto;
+  background: linear-gradient(#7ba2e7, #6375d6);
+}
+
+/* 窗口太窄就把任务面板藏掉；搜索窗口的条件面板不能藏，再显示出来，缩窄一点 */
+.window.narrow .taskpane {
+  display: none;
+}
+
+.window.narrow .search-pane {
+  display: flex;
+  width: 170px;
+}
+
+/* 任务面板里的一块 */
+.tp-panel {
+  flex: none;
+  border-radius: 4px 4px 0 0;
+  overflow: hidden;
+  background: #d6dff7;
+}
+
+.tp-head {
+  margin: 0;
+  padding: 5px 10px;
+  font-size: 11px;
+  color: #215dc6;
+  background: linear-gradient(90deg, #fff, #c6d3f7);
+}
+
+.tp-body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 7px;
+  padding: 9px 10px;
+  border: 1px solid #fff;
+  border-top: 0;
+}
+
+/* 任务面板里能点的一行；长得像链接 */
+.tp-link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #215dc6;
+  text-align: left;
+  cursor: pointer;
+}
+
+.tp-link:enabled:hover {
+  color: #428eff;
+  text-decoration: underline;
+}
+
+.tp-link:disabled {
+  color: #8c9dc8;
+  cursor: default;
+}
+
+.tp-link svg {
+  flex: none;
+}
+
+.tp-text {
+  margin: 0;
+}
+
+/* 选中文件的详情 */
+.tp-details {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  width: 100%;
+  min-width: 0;
+}
+
+.tp-details b {
+  overflow-wrap: break-word;
+}
+
+.tp-details a {
+  color: #215dc6;
+}
+
+.tp-preview {
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  margin-bottom: 4px;
+  object-fit: cover;
+  border: 2px solid #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.tp-snippet {
+  color: #444;
+  font-style: italic;
+  white-space: pre-line;
+}
+
+/* 文件列表；内容多了自己滚 */
+.ex-content {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  padding: 8px;
+  overflow: auto;
+  background: #fff;
+}
+
+/* 拖着文件经过时整块高亮 */
+.ex-content.drop-hover {
+  background: #eef4ff;
+  box-shadow: inset 0 0 0 3px #316ac5;
+}
+
+/* 分组标题，比如年份 */
+.group-head {
+  margin: 8px 0 6px;
+  padding-bottom: 3px;
+  font-size: 12px;
+  color: #215dc6;
+  border-bottom: 1px solid;
+  border-image: linear-gradient(90deg, #a7bde9, transparent) 1;
+}
+
+.ex-group:first-child .group-head {
+  margin-top: 0;
+}
+
+/* 文件夹是空的时候那句提示 */
+.empty {
+  margin: 48px 16px;
+  color: #777;
+  text-align: center;
+}
+
+/* 搜索窗口左边的条件 */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  width: 100%;
+}
+
+.field > input,
+.field select {
+  width: 100%;
+  padding: 2px 3px;
+  border: 1px solid #7f9db9;
+  background: #fff;
+}
+
+.radio {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* 看图窗口 */
+.viewer {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+}
+
+.viewer-stage {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #999;
+}
+
+/* 图片还没加载出来时先显示这句；加载完被图片盖住 */
+.viewer-stage::before {
+  content: 'Loading picture…';
+}
+
+/* 图片居中，按窗口大小等比缩小，四周留12px */
+.viewer-stage img {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  bottom: 12px;
+  left: 12px;
+  margin: auto;
+  max-width: calc(100% - 24px);
+  max-height: calc(100% - 24px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+
+.viewer-caption {
+  flex: none;
+  padding: 2px 10px 6px;
+  color: #444;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.viewer-caption a {
+  color: #215dc6;
+}
+
+.viewer-bar {
+  flex: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 6px;
+  border-top: 1px solid #c9c7ba;
+  background: linear-gradient(#f7f7f3, #e3e1d6);
+}
+
+.viewer-count {
+  min-width: 52px;
+  text-align: center;
+  color: #555;
+}
+
+.bar-sep {
+  width: 1px;
+  height: 22px;
+  margin: 0 4px;
+  background: #b9b7aa;
+}
+
+/* 上一张、下一张的圆按钮 */
+.round-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 1px solid #6b8fd4;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #fff, #c9dbfa 60%, #8fb1ec);
+  cursor: pointer;
+}
+
+.round-btn:enabled:hover {
+  box-shadow: 0 0 0 2px #fbc761;
+}
+
+.round-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+/* 记事本 */
+.notepad {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 记事本顶上的菜单栏 */
+.menubar {
+  flex: none;
+  display: flex;
+  padding: 1px 2px;
+  border-bottom: 1px solid #d4d0c0;
+}
+
+.menubar button {
+  padding: 2px 8px;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.menubar button:hover {
+  background: #316ac5;
+  color: #fff;
+}
+
+/* 正文用等宽字体；跟老记事本一个味 */
+.notepad-text {
+  flex: 1;
+  min-height: 0;
+  padding: 6px 8px;
+  border: 0;
+  border-top: 1px solid #a5a5a5;
+  outline: 0;
+  resize: none;
+  background: #fff;
+  font: 13px/1.5 'Lucida Console', Monaco, Consolas, monospace;
+}
+
+/* 按钮；悬停时内圈发黄光，老系统那种 */
+.xp-btn {
+  min-width: 72px;
+  height: 23px;
+  padding: 0 10px;
+  border: 1px solid #003c74;
+  border-radius: 3px;
+  background: linear-gradient(180deg, #fff, #ecebe6 86%, #d6d0c5);
+  cursor: pointer;
+}
+
+.xp-btn:enabled:hover {
+  box-shadow: inset -1px 1px #fff0cf, inset 1px 2px #fdd889, inset -2px 2px #fbc761, inset 2px -2px #e5a01a;
+}
+
+.xp-btn:enabled:active {
+  background: linear-gradient(180deg, #cdcac3, #e3e3db 8%, #e5e5de 94%, #f2f2f1);
+}
+
+.xp-btn:disabled {
+  color: #aca899;
+  border-color: #c9c7ba;
+  cursor: default;
+}
+
+/* 确认对话框 */
+/* 对话框背后的遮罩；盖住整个屏幕，点不到别的 */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 4000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.12);
+}
+
+.window.dialog {
+  position: relative;
+  width: 400px;
+  max-width: calc(100vw - 32px); /* 小屏幕上两边留16px */
+}
+
+.dialog-body {
+  padding: 16px 14px 12px;
+  gap: 14px;
+}
+
+.dialog-msg {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.dialog-msg p {
+  margin: 4px 0 0;
+}
+
+.dialog-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* ---------- 任务栏 ---------- */
+
+/* 任务栏；一大串渐变是为了做出立体感 */
+.taskbar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 900;
+  display: flex;
+  height: 30px;
+  background: linear-gradient(
+    180deg,
+    #1f2f86,
+    #3165c4 3%,
+    #3682e5 6%,
+    #4490e6 10%,
+    #3883e5 12%,
+    #2b71e0 15%,
+    #2663da 18%,
+    #235bd6 20%,
+    #2258d5 23%,
+    #2157d6 38%,
+    #245ddb 54%,
+    #2562df 86%,
+    #245fdc 89%,
+    #2158d4 92%,
+    #1d4ec0 95%,
+    #1941a5 98%
+  );
+}
+
+/* 绿色的开始按钮 */
+.start-button {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-right: 12px;
+  padding: 0 22px 2px 9px;
+  border: 0;
+  border-radius: 0 12px 12px 0;
+  color: #fff;
+  font: italic bold 19px/1 'Trebuchet MS', Tahoma, sans-serif;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+  background: linear-gradient(180deg, #3d953d, #5cbf5c 9%, #43a143 22%, #3a913a 55%, #2f7d2f 85%, #245f24);
+  box-shadow: inset -2px 0 3px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+}
+
+.start-button:hover {
+  filter: brightness(1.1);
+}
+
+.start-button.pressed {
+  filter: brightness(0.82);
+}
+
+/* 窗口按钮；多了就挤一挤，每个变窄 */
+.task-buttons {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  gap: 3px;
+  padding: 3px 0;
+  overflow: hidden;
+}
+
+.task {
+  flex: 0 1 165px;
+  min-width: 36px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0 8px;
+  border: 0;
+  border-radius: 3px;
+  color: #fff;
+  background: #3c81f3;
+  box-shadow: inset -1px 0 rgba(0, 0, 0, 0.3), inset 1px 1px 1px rgba(255, 255, 255, 0.25);
+  text-align: left;
+  cursor: pointer;
+}
+
+.task svg {
+  flex: none;
+}
+
+.task span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.task:hover {
+  background: #53a3ff;
+}
+
+/* 当前窗口的按钮是按下去的样子 */
+.task.active {
+  background: #1e52b7;
+  box-shadow: inset 0 0 1px 1px rgba(0, 0, 0, 0.3), inset 1px 1px 2px rgba(0, 0, 0, 0.6);
+}
+
+/* 右边的托盘；提示图标和时钟 */
+.tray {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-left: 8px;
+  padding: 0 12px 0 10px;
+  color: #fff;
+  border-left: 1px solid #092e8a;
+  box-shadow: inset 1px 0 1px #18bbff;
+  background: linear-gradient(180deg, #0c59b9 1%, #139ee9 6%, #18b5f2 10%, #139beb 14%, #1290e8 19%, #0d8dea 63%, #0d9ff1 81%, #0f9eed 88%, #119be9 91%, #1392e2 94%, #137ed7 97%, #095bc9);
+}
+
+.tray-icon {
+  display: flex;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+/* ---------- 开始菜单 ---------- */
+
+/* 开始菜单；贴着任务栏往上弹；小屏幕上不超出屏幕宽 */
+.start-menu {
+  position: absolute;
+  left: 0;
+  bottom: 30px;
+  z-index: 950;
+  display: flex;
+  flex-direction: column;
+  width: 400px;
+  max-width: 100vw;
+  overflow: hidden;
+  border: 1px solid #0b3ca8;
+  border-bottom: 0;
+  border-radius: 8px 8px 0 0;
+  background: #4282d6;
+  box-shadow: 3px -2px 10px rgba(0, 0, 0, 0.5);
+}
+
+/* 顶上的头像和名字 */
+.sm-head {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  height: 60px;
+  padding: 6px 9px;
+  color: #fff;
+  font: bold 15px 'Trebuchet MS', Tahoma, sans-serif;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
+  background: linear-gradient(180deg, #1868ce, #0e60cb 12%, #1164cf 32%, #1b6cd3 47%, #2476dc 60%, #3283e8 77%, #3a89e3 88%, #276fd5);
+  box-shadow: inset 0 -2px #e5933c;
+}
+
+.sm-avatar {
+  width: 46px;
+  height: 46px;
+  object-fit: cover;
+  border: 2px solid #e3e8ff;
+  border-radius: 4px;
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+.sm-body {
+  display: flex;
+  min-height: 300px;
+}
+
+/* 左右两栏；左边白底 */
+.sm-left,
+.sm-right {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  padding: 6px 0;
+  list-style: none;
+}
+
+.sm-left {
+  background: #fff;
+}
+
+.sm-right {
+  max-height: 340px;
+  overflow: auto;
+  background: #d3e5fa;
+  border-left: 1px solid #95bdee;
+}
+
+/* 菜单里的一项 */
+.sm-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 4px 9px;
+  border: 0;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+}
+
+.sm-item svg {
+  flex: none;
+}
+
+.sm-item span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sm-item.big {
+  padding: 5px 9px;
+}
+
+.sm-item b,
+.sm-item small {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sm-item small {
+  color: #777;
+}
+
+.sm-right .sm-item {
+  color: #0a246a;
+}
+
+.sm-item:hover {
+  background: #316ac5;
+  color: #fff;
+}
+
+.sm-item:hover small {
+  color: #dde6f7;
+}
+
+.sm-sep {
+  height: 1px;
+  margin: 5px 9px;
+  background: linear-gradient(90deg, transparent, #b3b3b3, transparent);
+}
+
+/* 底下那条；放重置按钮 */
+.sm-foot {
+  display: flex;
+  justify-content: flex-end;
+  gap: 4px;
+  padding: 6px 8px;
+  background: linear-gradient(180deg, #4282d6, #3b81f3 10%, #2f6cd7 80%, #1b55c1);
+}
+
+.sm-foot button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 7px;
+  border: 0;
+  border-radius: 3px;
+  background: none;
+  color: #fff;
+  cursor: pointer;
+}
+
+.sm-foot button:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+/* ---------- 右键菜单 ---------- */
+
+/* 右键菜单；fixed定位，跟着鼠标位置弹 */
+.ctx-menu {
+  position: fixed;
+  z-index: 2000;
+  min-width: 180px;
+  padding: 2px;
+  border: 1px solid #aca899;
+  background: #fff;
+  color: #000;
+  font-weight: normal;
+  box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.35);
+}
+
+/* 菜单项；悬停变蓝 */
+.ctx-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 21px;
+  padding-right: 20px;
+  white-space: nowrap;
+  cursor: default;
+}
+
+.ctx-item:hover,
+.ctx-item.open {
+  background: #316ac5;
+  color: #fff;
+}
+
+/* 灰掉的项悬停也不变蓝 */
+.ctx-item.disabled,
+.ctx-item.disabled:hover {
+  color: #aca899;
+}
+
+.ctx-item.disabled:hover {
+  background: #f1efe2;
+}
+
+/* 左边打勾那一列；没勾也占着位置，文字才对得齐 */
+.ctx-check {
+  width: 22px;
+  flex: none;
+  text-align: center;
+}
+
+.ctx-label {
+  flex: 1;
+}
+
+.ctx-item.bold .ctx-label {
+  font-weight: bold;
+}
+
+.ctx-arrow {
+  position: absolute;
+  right: 7px;
+  font-size: 7px;
+}
+
+/* 分隔线 */
+.ctx-sep {
+  height: 1px;
+  margin: 3px 1px;
+  background: #aca899;
+}
+
+/* ---------- 提示气泡 ---------- */
+
+/* 右下角的黄色提示气泡 */
+.balloon {
+  position: absolute;
+  right: 10px;
+  bottom: 44px;
+  z-index: 960;
+  width: 290px;
+  padding: 9px 28px 10px 11px;
+  border: 1px solid #000;
+  border-radius: 8px;
+  background: #ffffe1;
+  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.35);
+}
+
+/* 气泡底下指向托盘的小尖角；两个三角叠一起，一个当边框一个当填充 */
+.balloon::before,
+.balloon::after {
+  content: '';
+  position: absolute;
+  right: 34px;
+  border: 12px solid transparent;
+  border-bottom: 0;
+  border-right: 0;
+}
+
+.balloon::before {
+  bottom: -13px;
+  border-top-color: #000;
+}
+
+.balloon::after {
+  bottom: -11px;
+  right: 35px;
+  border-width: 11px;
+  border-top-color: #ffffe1;
+}
+
+.balloon b {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+.balloon p {
+  margin: 0;
+}
+
+/* 气泡的关闭按钮 */
+.balloon-x {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  border: 1px solid #aca899;
+  border-radius: 3px;
+  background: #fff;
+  line-height: 12px;
+  cursor: pointer;
+}
+
+.balloon-x:hover {
+  border-color: #e5a01a;
+}

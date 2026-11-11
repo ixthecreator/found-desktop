@@ -1,0 +1,251 @@
+{
+  "owner": "Guest",
+  "items": [
+    {
+      "id": "bin",
+      "type": "bin",
+      "name": "Recycle Bin",
+      "parent": "desktop"
+    },
+    {
+      "id": "readme",
+      "type": "note",
+      "name": "README.txt",
+      "parent": "desktop",
+      "date": "2009-03-21",
+      "text": "FOUND DESKTOP\n=============\n\nThis computer was bought secondhand in 2009.\nNobody wiped the hard drive.\n\nThese are the files that were left on the desktop:\nphotos named by a camera instead of a person,\na few notes, and one folder someone started\nand never finished.\n\nYou can't know what these pictures meant to\nthe person who took them. But you can decide\nwhat they mean now.\n\n  - drag files into folders, or into piles anywhere\n  - right-click the desktop to make a new folder,\n    or to arrange everything by date (a timeline)\n  - double-click to open, F2 to rename,\n    Delete to throw something away\n  - Start > Search to find things by name or year\n  - drag your own pictures onto the screen\n    to leave something behind\n\nWhatever order you give them becomes their story."
+    },
+    {
+      "id": "f-pictures",
+      "type": "folder",
+      "name": "My Pictures",
+      "parent": "desktop",
+      "date": "2003-09-14"
+    },
+    {
+      "id": "f-new",
+      "type": "folder",
+      "name": "New Folder",
+      "parent": "desktop",
+      "date": "2005-02-01"
+    },
+    {
+      "id": "p129",
+      "type": "image",
+      "name": "IMG_0514.JPG",
+      "parent": "desktop",
+      "date": "2006-06-17",
+      "src": "https://picsum.photos/id/129/1200/800",
+      "thumb": "https://picsum.photos/id/129/240/160",
+      "credit": "Charlie Foster",
+      "source": "https://unsplash.com/photos/A88emaZe7d8"
+    },
+    {
+      "id": "p1011",
+      "type": "image",
+      "name": "DSC00612.JPG",
+      "parent": "desktop",
+      "date": "2004-07-18",
+      "src": "https://picsum.photos/id/1011/1200/800",
+      "thumb": "https://picsum.photos/id/1011/240/160",
+      "credit": "Roberto Nickson",
+      "source": "https://unsplash.com/photos/7BjmDICVloE"
+    },
+    {
+      "id": "n-todo",
+      "type": "note",
+      "name": "todo.txt",
+      "parent": "desktop",
+      "date": "2004-07-15",
+      "text": "before the lake:\n- charge camera battery!!\n- burn a cd for the drive (no skipping track 4 this time)\n- ask M. if she still has the tent\n- library books (overdue. sorry.)\n- call grandma back"
+    },
+    {
+      "id": "p1062",
+      "type": "image",
+      "name": "IMG_0012.JPG",
+      "parent": "desktop",
+      "date": "2005-01-14",
+      "src": "https://picsum.photos/id/1062/1200/800",
+      "thumb": "https://picsum.photos/id/1062/240/160",
+      "credit": "Matthew Wiebe",
+      "source": "https://unsplash.com/photos/2Ts5HnA67k8"
+    },
+    {
+      "id": "p82",
+      "type": "image",
+      "name": "DSC00455.JPG",
+      "parent": "desktop",
+      "date": "2004-04-11",
+      "src": "https://picsum.photos/id/82/1200/800",
+      "thumb": "https://picsum.photos/id/82/240/160",
+      "credit": "Rula Sibai",
+      "source": "https://unsplash.com/photos/-vq7mi4oF0s"
+    },
+    {
+      "id": "n-snow",
+      "type": "note",
+      "name": "snow.txt",
+      "parent": "desktop",
+      "date": "2005-01-14",
+      "text": "snowed again last night.\nbiscuit refuses to go outside without his blanket.\nhonestly same."
+    },
+    {
+      "id": "p274",
+      "type": "image",
+      "name": "IMG_0777.JPG",
+      "parent": "desktop",
+      "date": "2006-12-31",
+      "src": "https://picsum.photos/id/274/1200/800",
+      "thumb": "https://picsum.photos/id/274/240/160",
+      "credit": "Wojtek Witkowski",
+      "source": "https://unsplash.com/photos/h7rOzTmGxWE"
+    },
+    {
+      "id": "p64",
+      "type": "image",
+      "name": "DSC00701.JPG",
+      "parent": "desktop",
+      "date": "2004-08-22",
+      "src": "https://picsum.photos/id/64/1200/800",
+      "thumb": "https://picsum.photos/id/64/240/160",
+      "credit": "Alexander Shustov",
+      "source": "https://unsplash.com/photos/AHBiSKaENwc"
+    },
+    {
+      "id": "p42",
+      "type": "image",
+      "name": "IMG_0098.JPG",
+      "parent": "desktop",
+      "date": "2005-03-06",
+      "src": "https://picsum.photos/id/42/1200/800",
+      "thumb": "https://picsum.photos/id/42/240/160",
+      "credit": "Luke Chesser",
+      "source": "https://unsplash.com/photos/KR2mdHJ5qMg"
+    },
+    {
+      "id": "n-lake",
+      "type": "note",
+      "name": "lake.txt",
+      "parent": "desktop",
+      "date": "2004-07-20",
+      "text": "got there before six. nobody else was awake.\nthe water was so still it looked like a second sky.\n\ni took too many pictures of the same view.\ni don't care."
+    },
+    {
+      "id": "p10",
+      "type": "image",
+      "name": "DSC00613.JPG",
+      "parent": "desktop",
+      "date": "2004-07-18",
+      "src": "https://picsum.photos/id/10/1200/800",
+      "thumb": "https://picsum.photos/id/10/240/160",
+      "credit": "Paul Jarvis",
+      "source": "https://unsplash.com/photos/6J--NXulQCs"
+    },
+    {
+      "id": "p1080",
+      "type": "image",
+      "name": "IMG_0510.JPG",
+      "parent": "desktop",
+      "date": "2006-06-17",
+      "src": "https://picsum.photos/id/1080/1200/800",
+      "thumb": "https://picsum.photos/id/1080/240/160",
+      "credit": "veeterzy",
+      "source": "https://unsplash.com/photos/OJJIaFZOeX4"
+    },
+    {
+      "id": "n-passwords",
+      "type": "note",
+      "name": "passwords DO NOT OPEN.txt",
+      "parent": "desktop",
+      "date": "2006-02-02",
+      "text": "nice try."
+    },
+    {
+      "id": "p1035",
+      "type": "image",
+      "name": "DSC00640.JPG",
+      "parent": "desktop",
+      "date": "2004-07-19",
+      "src": "https://picsum.photos/id/1035/1200/800",
+      "thumb": "https://picsum.photos/id/1035/240/160",
+      "credit": "Jared Erondu",
+      "source": "https://unsplash.com/photos/j4PaE7E2_Ws"
+    },
+    {
+      "id": "p152",
+      "type": "image",
+      "name": "IMG_0233.JPG",
+      "parent": "desktop",
+      "date": "2005-05-30",
+      "src": "https://picsum.photos/id/152/1200/800",
+      "thumb": "https://picsum.photos/id/152/240/160",
+      "credit": "Steven Spassov",
+      "source": "https://unsplash.com/photos/tVIqMgGlAG0"
+    },
+    {
+      "id": "p399",
+      "type": "image",
+      "name": "IMG_0901.JPG",
+      "parent": "desktop",
+      "date": "2007-08-12",
+      "src": "https://picsum.photos/id/399/1200/800",
+      "thumb": "https://picsum.photos/id/399/240/160",
+      "credit": "Sunset Girl",
+      "source": "https://unsplash.com/photos/FjAD28N8-IQ"
+    },
+    {
+      "id": "p366",
+      "type": "image",
+      "name": "IMG_0934.JPG",
+      "parent": "desktop",
+      "date": "2007-08-30",
+      "src": "https://picsum.photos/id/366/1200/800",
+      "thumb": "https://picsum.photos/id/366/240/160",
+      "credit": "Rayi Christian Wicaksono",
+      "source": "https://unsplash.com/photos/6PF6DaiWz48"
+    },
+    {
+      "id": "n-goodbye",
+      "type": "note",
+      "name": "goodbye.txt",
+      "parent": "desktop",
+      "date": "2007-08-30",
+      "text": "moving out tomorrow.\nthe computer stays here for whoever comes next.\n\ni never sorted the photos. i kept meaning to.\nmaybe you can.",
+      "x": 430,
+      "y": 250
+    },
+    {
+      "id": "p76",
+      "type": "image",
+      "name": "DSC00041.JPG",
+      "parent": "f-pictures",
+      "date": "2003-09-14",
+      "src": "https://picsum.photos/id/76/1200/800",
+      "thumb": "https://picsum.photos/id/76/240/160",
+      "credit": "Alexander Shustov",
+      "source": "https://unsplash.com/photos/OxzhYtL-00Y"
+    },
+    {
+      "id": "p167",
+      "type": "image",
+      "name": "DSC00187.JPG",
+      "parent": "f-pictures",
+      "date": "2003-10-25",
+      "src": "https://picsum.photos/id/167/1200/800",
+      "thumb": "https://picsum.photos/id/167/240/160",
+      "credit": "petradr",
+      "source": "https://unsplash.com/photos/WqK_xV_hbug"
+    },
+    {
+      "id": "p1025",
+      "type": "image",
+      "name": "DSC00302.JPG",
+      "parent": "f-pictures",
+      "date": "2004-01-03",
+      "src": "https://picsum.photos/id/1025/1200/800",
+      "thumb": "https://picsum.photos/id/1025/240/160",
+      "credit": "Matthew Wiebe",
+      "source": "https://unsplash.com/photos/U5rMrSI7Pn4"
+    }
+  ]
+}
